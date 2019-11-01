@@ -1,26 +1,56 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+//Components
+import ShortList from './components/shortlist'
+import Credit from './components/credit'
+import Search from "./components/search";
+import NamesList from './components/nameslist'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+//use the div wrapper since all elements in the return statement must be wrapped in one wrapper for react to compile
+class App extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            filterText: '',
+            favorites: []
+        }
+    }
+    filterUpdate(value) {
+        this.setState({
+            filterText: value
+        })
+    }
+
+    addFavorite(id) {
+        const list = this.state.favorites.concat([id]);
+        this.setState({
+            favorites: list
+        })
+    }
+    render () {
+        return (
+            <div>
+                <Search
+                    filterText = {this.state.filterText}
+                    filterUpdate = {this.filterUpdate.bind(this)}
+                />
+                <main>
+                    <ShortList
+                        favorites={this.state.favorites}
+                        data={this.props.data}
+
+                    />
+                    <NamesList
+                        data={this.props.data}
+                        filterText={this.state.filterText}
+                        addFavorite={this.addFavorite.bind(this)}
+                    />
+                    <Credit />
+                </main>
+            </div>
+        )
+    }
 }
 
 export default App;
